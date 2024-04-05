@@ -8,9 +8,16 @@ modules:
       title: WNJ-comment-inspector
       description: A hello world issue context.
       label: Hello World!
+  trigger:
+    - key: issue-commented-event
+      function: trigger
+      events:
+        - avi:jira:commented:issue
   function:
     - key: resolver
       handler: index.handler
+    - key: trigger
+      handler: index.trigger
 resources:
   - key: main
     path: src/frontend/index.jsx
@@ -19,3 +26,4 @@ app:
 permissions:
   scopes:
     - read:jira-work
+    - write:jira-work
