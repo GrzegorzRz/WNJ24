@@ -1,0 +1,18 @@
+modules:
+  jira:issueContext:
+    - key: wnj-comment-inspector-hello-world-issue-context
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: WNJ-comment-inspector
+      description: A hello world issue context.
+      label: Hello World!
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+app:
+  id: ari:cloud:ecosystem::app/efa7e772-5fdd-4018-a849-4d6c3886b098
