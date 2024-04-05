@@ -16,3 +16,6 @@ resources:
     path: src/frontend/index.jsx
 app:
   id: ari:cloud:ecosystem::app/efa7e772-5fdd-4018-a849-4d6c3886b098
+permissions:
+  scopes:
+    - read:jira-work

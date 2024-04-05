@@ -1,18 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import ForgeReconciler, { Text } from '@forge/react';
-import { invoke } from '@forge/bridge';
+import ForgeReconciler, {Text, useProductContext} from '@forge/react';
+import {invoke, requestJira} from '@forge/bridge';
 
+const fetchCommentsForIssue = async (issueIdOrKey) => {
+    const res = await requestJira(`/rest/api/3/issue/${issueIdOrKey}/comment`);
+    const data = await res.json();
+    return data.comments;
+};
+const countEmojis=(comments)=>{
+    let counter=0;
+    comments.find(comment=>{
+        return comment.body.content.find(docElement=>docElement.content.find(content=>{
+            if(content.type==="emoji"){
+                counter++;
+            }
+        }))
+    })
+    return counter;
+}
 const App = () => {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    invoke('getText', { example: 'my-invoke-variable' }).then(setData);
-  }, []);
-  return (
-    <>
-      <Text>Hello world!</Text>
-      <Text>{data ? data : 'Loading...'}</Text>
-    </>
-  );
+    const context=useProductContext();
+    const [comments, setComments] = useState(null);
+    useEffect(() => {
+        if (context){
+            const issueId =context.extension.issue.id;
+            fetchCommentsForIssue(issueId).then(setComments)
+        }
+    }, [context]);
+    return (
+        <>
+            <Text>{comments ? `Issue: ${context.extension.issue.id} has ${countEmojis(comments)} emojis` : 'Loading...'}</Text>
+        </>
+    );
 };
 
 ForgeReconciler.render(
